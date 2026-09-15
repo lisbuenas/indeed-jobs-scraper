@@ -1,0 +1,74 @@
+{
+  "title": "Indeed Jobs Scraper input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "keywords": {
+      "title": "Keywords",
+      "type": "string",
+      "description": "Job title, skills or company to search for (Indeed's \"What\" field).",
+      "editor": "textfield",
+      "prefill": "software engineer"
+    },
+    "location": {
+      "title": "Location",
+      "type": "string",
+      "description": "City, state, ZIP code or \"remote\" (Indeed's \"Where\" field). Leave empty to search the whole country.",
+      "editor": "textfield",
+      "prefill": "New York, NY"
+    },
+    "country": {
+      "title": "Country",
+      "type": "string",
+      "description": "Two-letter country code that selects the Indeed site: us = www.indeed.com, uk = uk.indeed.com, ca = ca.indeed.com, br = br.indeed.com, and so on.",
+      "editor": "textfield",
+      "pattern": "^[A-Za-z]{2}$",
+      "default": "us"
+    },
+    "maxResults": {
+      "title": "Max results",
+      "type": "integer",
+      "description": "Maximum number of jobs to save.",
+      "minimum": 1,
+      "default": 50
+    },
+    "daysPosted": {
+      "title": "Posted within (days)",
+      "type": "integer",
+      "description": "Only jobs posted in the last N days. Indeed supports 1, 3, 7 and 14; other values are rounded up to the nearest supported value.",
+      "minimum": 1,
+      "maximum": 14
+    },
+    "jobType": {
+      "title": "Job type",
+      "type": "string",
+      "description": "Only jobs of this type.",
+      "editor": "select",
+      "enum": ["fulltime", "parttime", "contract", "internship"],
+      "enumTitles": ["Full-time", "Part-time", "Contract", "Internship"]
+    },
+    "remoteOnly": {
+      "title": "Remote jobs only",
+      "type": "boolean",
+      "description": "Only return remote jobs.",
+      "default": false
+    },
+    "maxConcurrency": {
+      "title": "Max concurrency",
+      "type": "integer",
+      "description": "Maximum number of pages open at the same time. Keep it low to avoid blocks.",
+      "minimum": 1,
+      "maximum": 10,
+      "default": 2
+    },
+    "proxyConfiguration": {
+      "title": "Proxy configuration",
+      "type": "object",
+      "description": "Indeed actively blocks scrapers. Apify Proxy is strongly recommended; residential proxies give the best success rate.",
+      "editor": "proxy",
+      "prefill": { "useApifyProxy": true },
+      "default": { "useApifyProxy": true }
+    }
+  },
+  "required": ["keywords"]
+}

@@ -1,0 +1,11 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "Indeed jobs",
+  "properties": {
+    "results": {
+      "type": "string",
+      "title": "Job items",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    }
+  }
+}
