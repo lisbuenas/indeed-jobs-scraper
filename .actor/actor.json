@@ -5,7 +5,7 @@
   "description": "Scrape job listings from Indeed with full details. Resilient multi-selector architecture. Supports keyword, location, job type and date filters.",
   "version": "0.1",
   "buildTag": "latest",
-  "environmentVariables": [],
+  "environmentVariables": {},
   "dockerfile": "./Dockerfile",
   "output": "./output.json"
 }
