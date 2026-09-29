@@ -388,7 +388,7 @@ function deepFindString(obj, keys) {
 }
 
 /** Search results model: window.mosaic.providerData["mosaic-provider-jobcards"]. */
-async function extractListingJson(page, html) {
+async function extractListingJson(page, getHtml) {
     let model = null;
     try {
         model = await page.evaluate(() => {
@@ -580,6 +580,8 @@ async function assertNotBlocked(page, session) {
 const crawler = new PlaywrightCrawler({
     proxyConfiguration,
     maxConcurrency,
+    minConcurrency: 1, // Prevent auto-scaler from ramping below 1; avoids unnecessary
+                       // concurrency oscillation when maxConcurrency is low (1-2).
     maxRequestRetries: 6,
     requestHandlerTimeoutSecs: 120,
     navigationTimeoutSecs: 60,
@@ -637,15 +639,30 @@ async function handleList({ request, page, addRequests }) {
     ].join(', ');
     await page.waitForSelector(readySelector, { timeout: 20_000 }).catch(() => {});
 
-    const html = await page.content();
+    // Lazy HTML getter: fetch once on first call, memoize for subsequent uses.
+    let _html = null;
+    const getHtml = async () => {
+    // Lazy HTML getter: fetch once on first call, memoize for subsequent uses.
+    let _html = null;
+    const getHtml = async () => {
+        if (_html === null) _html = await page.content();
+        return _html;
+    };e for subsequent uses.
+    let _html = null;
+    const getHtml = async () => {
+        if (_html === null) _html = await page.content();
+        return _html;
+    };
+        return _html;
+    };
 
     // Layer 1: embedded search results JSON.
-    const jsonCards = (await extractListingJson(page, html)).map(cardFromJson);
+    const jsonCards = (await extractListingJson(page, getHtml)).map(cardFromJson);
 
     // Layer 2: CSS selectors on the rendered cards.
     let domCards = [];
     try {
-        domCards = await page.evaluate(browserExtract, { mode: 'cards', cardSelectors: CARD_SELECTORS, fields: CARD_FIELDS });
+        domCards = await page.evaluate(browserExtracgetHtml mode: 'cards', cardSelectors: CARD_SELECTORS, fields: CARD_FIELDS });
     } catch (err) {
         log.warning(`Card DOM extraction failed on ${request.url}: ${err.message}`);
     }
